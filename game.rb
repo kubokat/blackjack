@@ -1,5 +1,5 @@
-# Menu class
-class Menu
+# Game class
+class Game
   attr_accessor :user, :dealer
 
   @@games = 0
@@ -16,7 +16,9 @@ class Menu
   def new_game
     new_game_flg = 1
 
-    new_game_flg = TextInterface.gen_menu('start_menu') if @@games > 0
+    if @@games > 0 && user.bank > 0 && dealer.bank > 0
+      new_game_flg = TextInterface.gen_menu('start_menu')
+    end
 
     if new_game_flg > 0
       @@games += 1
@@ -91,7 +93,7 @@ class Menu
     dealer_score = dealer.cards.score
 
     return false if (user_score == dealer_score) || (user_score > 21 && dealer_score > 21)
-    return dealer if user_score > 21 || dealer_score > user_score && dealer_score < 21
-    return user if dealer_score > 21 || dealer_score < user_score && user_score < 21
+    return dealer if user_score > 21 || dealer_score > user_score && dealer_score <= 21
+    return user if dealer_score > 21 || dealer_score < user_score && user_score <= 21
   end
 end

@@ -25,10 +25,10 @@ module TextInterface
   end
 
   def self.winner_result(winner)
-    if winner
-      puts "#{winner.name} is winner #{winner.bank}$"
-    else
+    if winner == false
       puts 'dead heat'
+    else
+      puts "#{winner.name} is winner #{winner.bank}$"
     end
   end
 end
