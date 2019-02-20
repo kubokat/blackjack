@@ -1,31 +1,32 @@
-# Deck module
-module Deck
-  SUITS = %w[♠ ♥ ♣ ♦].freeze
-  MARKED_CARDS = %w[A J Q K].freeze
+# Deck class
+class Deck
+  attr_reader :cards
 
-  attr_reader :kol
+  @cards = []
 
-  @kol = []
-
-  def self.make_deck
-    i = 0
-
-    SUITS.each do |suit|
-      (2..9).each do |j|
-        @kol[i] = Hash[j.to_s + suit, j]
-        i += 1
-      end
-
-      MARKED_CARDS.each do |mark|
-        @kol[i] = Hash[mark + suit, mark]
-        i += 1
-      end
-    end
-
-    @kol
+  def initialize
+    @cards = make_deck
   end
 
-  def self.card
-    @kol.delete(@kol.sample)
+  def make_deck
+    deck = []
+
+    Card::SUITS.each do |suit|
+      (2..9).each do |j|
+        deck << Card.new(suit, j, j)
+      end
+
+      Card::MARKED_CARDS.each do |mark|
+        deck << Card.new(suit, mark, 10)
+      end
+
+      deck << Card.new(suit, 'A', nil)
+    end
+
+    deck
+  end
+
+  def card
+    @cards.delete(@cards.sample)
   end
 end

@@ -1,6 +1,6 @@
 # Dealer class
 class Dealer < Player
-  attr_accessor :name
+  attr_reader :name
 
   def initialize
     super
