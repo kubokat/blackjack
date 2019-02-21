@@ -8,27 +8,24 @@ module TextInterface
     gets.to_i
   end
 
-  def self.show_cards(obj, stars = false)
-    result = "#{obj.name}:"
-    obj.cards.hand.each do |card|
-      result += !stars ? " #{card.value} #{card.suite} " : ' *'
-    end
-
-    result += " = #{obj.cards.score}" unless stars
-
-    puts result
-  end
-
   def self.answer(answer)
     puts answer
     gets.chomp
   end
 
-  def self.winner_result(winner)
-    if winner == false
-      puts 'dead heat'
-    else
-      puts "#{winner.name} is winner #{winner.bank}$"
-    end
+  def self.show_str(*_args)
+    puts _args
+  end
+
+  def self.show_user_cards(_user, cards, _score = nil)
+    result = "#{_user}: #{cards.join(' ')}"
+
+    result += " = #{_score}" unless _score.nil?
+
+    puts result
+  end
+
+  def self.show_winner(name, bank)
+    puts "#{name} is winner #{bank}$"
   end
 end

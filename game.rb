@@ -20,10 +20,8 @@ class Game
       new_game_flg = TextInterface.gen_menu('start_menu')
     end
 
-    if new_game_flg > 0
+    unless new_game_flg <= 0
       @@games += 1
-
-      puts "Game number #{@@games} #{user.bank}$"
 
       user.cards, dealer.cards = nil
 
@@ -35,7 +33,7 @@ class Game
       user.cards = Hand.new([deck.card, deck.card])
       dealer.cards = Hand.new([deck.card, deck.card])
 
-      TextInterface.show_cards(user)
+      show_user_cards(user)
 
       loop do
         if user.cards.hand.length == 3 && dealer.cards.hand.length == 3
@@ -60,7 +58,7 @@ class Game
       true
     when 2 then
       user.cards.add_cards([deck.card])
-      TextInterface.show_cards(user)
+      show_user_cards(user)
       true
     when 3 then
       showdown
@@ -70,12 +68,26 @@ class Game
 
   def dealer_action(deck)
     dealer.cards.add_cards([deck.card]) if dealer.cards.score < 17
-    TextInterface.show_cards(dealer, true)
+    show_user_cards(dealer, true)
+  end
+
+  def cards_list(obj, stars = false)
+    result = []
+    obj.cards.hand.each do |card|
+      result << if !stars
+                  "#{card.value} #{card.suite}"
+                else
+                  '*'
+                end
+    end
+
+    result
   end
 
   def showdown
-    TextInterface.show_cards(user)
-    TextInterface.show_cards(dealer)
+    show_user_cards(user)
+    show_user_cards(dealer)
+
     winner = find_winner
 
     if winner
@@ -85,7 +97,23 @@ class Game
       dealer.bank += 10
     end
 
-    TextInterface.winner_result(winner)
+    winner_result(winner)
+  end
+
+  def winner_result(winner)
+    if winner == false
+      TextInterface.show_str('dead heat')
+    else
+      TextInterface.show_winner(winner.name, winner.bank)
+    end
+  end
+
+  def show_user_cards(user, stars = false)
+    if stars
+      TextInterface.show_user_cards(user.name, cards_list(user, stars))
+    else
+      TextInterface.show_user_cards(user.name, cards_list(user, stars), user.cards.score)
+    end
   end
 
   def find_winner
